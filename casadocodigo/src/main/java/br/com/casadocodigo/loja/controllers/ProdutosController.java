@@ -1,39 +1,45 @@
 package br.com.casadocodigo.loja.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import br.com.casadocodigo.loja.daos.ProdutoDAO;
 import br.com.casadocodigo.loja.models.Produto;
+import br.com.casadocodigo.loja.models.TipoPreco;
 
 @Controller
+@RequestMapping("/produtos")
 public class ProdutosController {
 	
 	@Autowired
 	private ProdutoDAO dao;
 	
-	@RequestMapping("/produtos/form")
-	public String form(){		
-		return "produtos/form";
+	@RequestMapping("/form")
+	public ModelAndView form(){	
+		ModelAndView mav = new ModelAndView("produtos/form").addObject("tiposPrecos", TipoPreco.values());		
+		return mav;
 	}
 	
 	
-	@RequestMapping("/produtos")
-	public String salvar(Produto produto){
-		
+	@RequestMapping(method=RequestMethod.POST)
+	public String gravar(Produto produto){
 		System.out.println(produto);
 		dao.gravar(produto);		
-		return "produtos/listagem";
+		return "produtos";
 	}
 	
 	
-	@RequestMapping("/produtos/listagem")
-	public String listagem(Produto produto){
+	@RequestMapping(method=RequestMethod.GET)
+	public ModelAndView listagem(){
 		
-		System.out.println(produto);
-		
-		return "produtos/listagem";
+		List<Produto> produtos = dao.listar();
+		ModelAndView mav = new ModelAndView("produtos/lista").addObject("produtos", produtos);		
+		return mav;
 	}
 
 }
