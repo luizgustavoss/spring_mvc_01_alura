@@ -13,17 +13,21 @@
 
 	<h1>Lista de Produtos</h1>
 	
-	<table>
+	<div>${sucesso}</div>
+	
+	<table width="100%">
 		<tr>
 			<td>Título</td>
 			<td>Descrição</td>
 			<td>Páginas</td>
+			<td>Data Lançamento</td>
 		</tr>
 		<c:forEach items="${produtos}" var="produto">
 			<tr>
 				<td>${produto.titulo}</td>
 				<td>${produto.descricao}</td>
 				<td>${produto.paginas}</td>
+				<td>${produto.dataLancamento}</td>
 			</tr>
 		</c:forEach>
 	</table>
