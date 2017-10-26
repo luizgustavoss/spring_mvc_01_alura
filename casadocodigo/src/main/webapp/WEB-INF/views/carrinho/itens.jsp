@@ -106,12 +106,20 @@
                       <td class="numeric-cell">R$ 59,90</td>
                       <td class="quantity-input-cell"><input type="number" min="0" readonly="readonly" id="updates_4082273665" name="updates[4082273665]" value="1"/></td>
                       <td class="numeric-cell">R$ 59,90</td>
-                      <td class="remove-item"><a href="/cart/change?218748921802387812&quantity=0"><img src="${contextPath }resources/imagens/excluir.png" alt="Excluir" title="Excluir" /></a></td>
+                      <td class="remove-item">
+						    <form action="${s:mvcUrl('CCC#remover').arg(0, item.produto.id).arg(1,item.tipoPreco).build() }" method="post">
+						        <input type="image" src="/excluir.png" alt="Excluir" title="Excluir" />
+						    </form>
+					  </td>
                   </tr>
               </tbody>
                   <tfoot>
                     <tr>
-                      <td colspan="3"><input type="submit" class="checkout" name="checkout" value="Finalizar compra" /></td>
+                      <td colspan="3">
+                      	<form action="${s:mvcUrl('PC#finalizar').build()}" method="post">
+						    <input type="submit" class="checkout" name="checkout" value="Finalizar compra" />
+						</form>
+                      </td>
                       <td class="quantity-input-cell"><input type="submit" class="update-cart" disabled="disabled" name="update" value=""/></td>
                       <td class="numeric-cell">R$ 59,90</td><td></td>
                     </tr>
