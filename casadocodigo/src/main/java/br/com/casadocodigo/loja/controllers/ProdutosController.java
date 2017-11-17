@@ -2,16 +2,20 @@ package br.com.casadocodigo.loja.controllers;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -46,6 +50,7 @@ public class ProdutosController {
 	
 	
 	@RequestMapping(method=RequestMethod.POST)
+	@CacheEvict(value="produtos.home", allEntries=true) // limpa um cache especificado
 	public ModelAndView gravar(MultipartFile sumario, @Valid Produto produto, BindingResult result, RedirectAttributes redirectAttributes){
 		
 		if(result.hasErrors()){
@@ -63,7 +68,7 @@ public class ProdutosController {
 	
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView listagem(){
+	public ModelAndView listar(){
 		
 		List<Produto> produtos = dao.listar();
 		ModelAndView mav = new ModelAndView("produtos/lista").addObject("produtos", produtos);		
@@ -79,6 +84,21 @@ public class ProdutosController {
 		Produto produto = dao.find(id);
 		modelAndView.addObject("produto", produto);
 		return modelAndView;
+	}
+	
+	
+	@RequestMapping("/{id}")
+	@ResponseBody
+	public Produto detalheJson(@PathVariable("id") Integer id){
+		
+		return dao.find(id);
+	}
+	
+	
+	@ExceptionHandler(NoResultException.class)
+	public String tratamentoDeErro(){
+		
+		return "erro";
 	}
 
 }
